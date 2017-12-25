@@ -1,4 +1,4 @@
-FROM php:7-apache
+FROM php:7.1-apache
 MAINTAINER Marco A Rojas <marco.rojas@zentek.com.mx>
 
 ENV SCRM_VERSION v7.9.8
@@ -25,14 +25,12 @@ RUN apt-get update \
 # Busybox installation
 RUN busybox --install
 
-# mcrypt not available with php source since 7.2
-RUN pecl install mcrypt-1.0.1 && docker-php-ext-enable mcrypt
-
 # Docker image configuration
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
     && docker-php-ext-install -j$(nproc) iconv \
+		    mcrypt \
 				pdo_mysql \
         curl \
         mbstring \
