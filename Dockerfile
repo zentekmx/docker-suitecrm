@@ -62,7 +62,11 @@ RUN (crontab -l 2>/dev/null; echo "* * * * *  php -f /var/www/html/cron.php > /d
 #Fix php warnings in dashboards
 RUN sed -i.back s/'<?php/<?php\n\nini_set\(display_errors\,0\)\;\nerror_reporting\(E_ALL\ \^\ E_STRICT\)\;\n\n/g' /var/www/html/modules/Calls/Dashlets/MyCallsDashlet/MyCallsDashlet.php
 
+#bootstrap files
+RUN mkdir /bootstrap
+RUN curl -o /bootstrap/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && chmod +x /bootstrap/wait-for-it
 COPY php.custom.ini /usr/local/etc/php/conf.d/
+COPY ./bootstrap /bootstrap
 
 # Clean temporary files and packages
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -70,6 +74,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 VOLUME [ "/var/www/html/upload", "/var/www/html/conf.d" ]
 
 EXPOSE 80
+
+CMD ["/bootstrap/suitecrm-init.sh"]
 
 # End of file
 # vim: set ts=2 sw=2 noet:
