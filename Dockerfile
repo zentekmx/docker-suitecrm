@@ -1,4 +1,4 @@
-FROM php:7.1-apache
+FROM php:7.0-apache
 MAINTAINER Marco A Rojas <marco.rojas@zentek.com.mx>
 
 ENV SCRM_VERSION v7.9.8
@@ -58,9 +58,6 @@ RUN mkdir conf.d \
 RUN chown -R www-data:www-data . && chmod -R 755 .
 
 RUN (crontab -l 2>/dev/null; echo "* * * * *  php -f /var/www/html/cron.php > /dev/null 2>&1 ") | crontab -
-
-#Fix php warnings in dashboards
-RUN sed -i.back s/'<?php/<?php\n\nini_set\(display_errors\,0\)\;\nerror_reporting\(E_ALL\ \^\ E_STRICT\)\;\n\n/g' /var/www/html/modules/Calls/Dashlets/MyCallsDashlet/MyCallsDashlet.php
 
 #bootstrap files
 RUN mkdir /bootstrap
