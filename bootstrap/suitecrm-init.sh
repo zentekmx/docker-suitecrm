@@ -55,6 +55,7 @@ write_suitecrm_config() {
     'setup_site_url' => '${SITE_URL}',
     'setup_system_name' => '${SYSTEM_NAME}',
   );
+	chown www-data:www-data ${CONFIG_SI_FILE}
 EOL
 }
 
