@@ -1,7 +1,7 @@
 FROM php:7.0-apache
 MAINTAINER Marco A Rojas <marco.rojas@zentek.com.mx>
 
-ENV SCRM_VERSION v7.9.10
+ENV SCRM_VERSION v7.10.0
 
 # Install requirements
 RUN apt-get update \
@@ -55,6 +55,7 @@ RUN mkdir conf.d \
     && touch conf.d/config.php conf.d/config_override.php \
     && ln -s conf.d/config.php \
     && ln -s conf.d/config_override.php
+# RUN chown -R www-data:www-data . && chmod -R 755 .
 
 RUN (crontab -l 2>/dev/null; echo "* * * * *  php -f /var/www/html/cron.php > /dev/null 2>&1 ") | crontab -
 

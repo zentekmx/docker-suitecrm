@@ -72,7 +72,7 @@ if [ ! -e ${DOCKER_BOOTSTRAPPED} ]; then
 	php -r "\$_SERVER['HTTP_HOST'] = 'localhost'; \$_SERVER['REQUEST_URI'] = 'install.php';\$_REQUEST = array('goto' => 'SilentInstall', 'cli' => true);require_once 'install.php';";
   echo "Ready to use..."
 
-	cd /var/www/html && chown -R www-data:www-data . && chmod -R 755 .
+	cd /var/www/html && chown -R www-data:www-data .
   touch ${DOCKER_BOOTSTRAPPED}
 	apache2-foreground
 else
