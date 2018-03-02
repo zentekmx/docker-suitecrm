@@ -71,12 +71,11 @@ if [ ! -e ${DOCKER_BOOTSTRAPPED} ]; then
   echo "##################################################################################"
   echo "##Running silent install, will take a couple of minutes, so go and take a tea...##"
   echo "##################################################################################"
-	cd /var/www/html
 
 	sed -i.back 's%die(\x27Composer%# die(\x27Composer%g' include/entryPoint.php
-	chown -R www-data:www-data . && chmod -R 755 . && chmod -R 775 custom modules themes data upload
-
 	php -r "\$_SERVER['HTTP_HOST'] = 'localhost'; \$_SERVER['REQUEST_URI'] = 'install.php';\$_REQUEST = array('goto' => 'SilentInstall', 'cli' => true);require_once 'install.php';";
+	chown -R www-data:www-data . && chmod -R 755 . && chmod -R 775 cache custom modules themes data upload
+
   echo "##################################################################################"
   echo "##System is ready to use, enjoy it################################################"
   echo "##################################################################################"
