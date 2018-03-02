@@ -77,13 +77,13 @@ if [ ! -e ${DOCKER_BOOTSTRAPPED} ]; then
 	chown -R www-data:www-data . && chmod -R 755 . && chmod -R 775 cache custom modules themes data upload
 
   echo "##################################################################################"
-  echo "##System is ready to use, enjoy it################################################"
+  echo "##SuiteCRM is ready to use, enjoy it##############################################"
   echo "##################################################################################"
 
   touch ${DOCKER_BOOTSTRAPPED}
 	apache2-foreground
 else
-  echo "Ready to use..."
+  echo "Ready to use suitecrm..."
 	apache2-foreground
 fi
 # End of file
