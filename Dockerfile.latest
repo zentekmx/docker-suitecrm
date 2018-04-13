@@ -1,7 +1,7 @@
-FROM php:7.0-apache
+FROM php:7.1-apache
 MAINTAINER Marco A Rojas <marco.rojas@zentek.com.mx>
 
-ENV SCRM_VERSION v7.10.0
+ENV SCRM_VERSION v7.10.4
 
 # Install requirements
 RUN apt-get update \
@@ -20,6 +20,7 @@ RUN apt-get update \
             libkrb5-dev \
             libldap2-dev \
             cron \
+            git \
             busybox
 
 # Busybox installation
@@ -58,13 +59,18 @@ RUN mkdir conf.d \
 
 RUN (crontab -l 2>/dev/null; echo "* * * * *  php -f /var/www/html/cron.php > /dev/null 2>&1 ") | crontab -
 
-#bootstrap files
+# composer
+RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');"
+RUN php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-plugins --no-scripts
+
+# bootstrap files
 RUN mkdir /bootstrap
 RUN curl -o /bootstrap/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && chmod +x /bootstrap/wait-for-it
 COPY php.custom.ini /usr/local/etc/php/conf.d/
 COPY ./bootstrap /bootstrap
 
-# Clean temporary files and packages
+# clean temporary files and packages
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 VOLUME [ "/var/www/html/upload", "/var/www/html/conf.d" ]
