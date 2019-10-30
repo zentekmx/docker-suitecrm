@@ -23,7 +23,7 @@ services:
     - MYSQL_DATABASE=suitecrmdb
 
   suitecrm:
-    image: zentekmx/suitecrm:latest
+    image: zentekmx/suitecrm:lts
     container_name: suitecrm.crm
     depends_on:
     - openldap
