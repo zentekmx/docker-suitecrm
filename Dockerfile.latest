@@ -1,7 +1,8 @@
 FROM php:7.1-apache
 MAINTAINER Marco A Rojas <marco.rojas@zentek.com.mx>
 
-ENV SCRM_VERSION v7.10.4
+# Latest at 201910
+ENV SCRM_VERSION v7.11.8
 
 # Install requirements
 RUN apt-get update \
@@ -19,6 +20,7 @@ RUN apt-get update \
             libc-client-dev \
             libkrb5-dev \
             libldap2-dev \
+            libicu-dev \
             cron \
             git \
             busybox
@@ -30,6 +32,7 @@ RUN busybox --install
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) iconv \
 		    mcrypt \
 				pdo_mysql \
@@ -44,7 +47,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         soap \
         zip \
         imap \
-        ldap
+        ldap \
+        intl
 
 WORKDIR /var/www/html
 
@@ -56,10 +60,12 @@ RUN mkdir conf.d \
     && touch conf.d/config.php conf.d/config_override.php \
     && ln -s conf.d/config.php \
     && ln -s conf.d/config_override.php
+RUN chown -R www-data:www-data . && chmod -R 755 .
 
 RUN (crontab -l 2>/dev/null; echo "* * * * *  php -f /var/www/html/cron.php > /dev/null 2>&1 ") | crontab -
 
 # composer
+RUN php --ini
 RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');"
 RUN php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-plugins --no-scripts
