@@ -44,7 +44,7 @@ services:
     - openldap
     - mysql
     ports:
-    - "8080:8080"
+    - "3000:3000"
     tty: true
     environment:
     - CURRENCY_ISO4217=MXN
